@@ -18,22 +18,23 @@ class App extends React.Component
         };
     }
     
-    async componentDidMount(){
-        const data = await fetch('http://www.filltext.com/?rows=1000&id={index}&fname={firstName}&lname={lastName}&tel={phone|format}&address={streetAddress}&city={city}&state={usState|abbr}&zip={zip}&pretty=true')
-                        .then(response => {
-                            return response.json();
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        })
-
-        this.setState({data, isLoaded: true});
+    componentWillMount(){
+        fetch('https://www.json-generator.com/api/json/get/cjwgivuqSq?indent=2')
+        .then(response => {
+            return response.json()
+        })
+        .then(data => {
+            this.setState({data, isLoaded: true});
+        })
+        .catch(error => {
+            console.log(error);
+        })
     }
 
-    toSort = async (sortCol) => {
+    toSort = (sortCol) => {
         let data = this.state.data.slice();
         
-        await this.setState({sortType: (this.state.sortType === 'asc') ? 'desk' : 'asc', sortCol});
+        this.setState({sortType: (this.state.sortType === 'asc') ? 'desk' : 'asc', sortCol});
         
         data.sort((a, b) => {
             if(a[sortCol] < b[sortCol])
@@ -43,12 +44,11 @@ class App extends React.Component
             return 0;
         });
         
-        this.setState({data} );
+        this.setState({data});
     }
 
-    toDetail = async (item) => {
-        await this.setState({detailedItem: item})
-        //console.log(this.state.detailedItem);
+    toDetail = (item) => {
+        this.setState({detailedItem: item})
     }
 
     onFilter = (value) => {
@@ -64,7 +64,7 @@ class App extends React.Component
             return  item['id'].toString().toLowerCase().includes(filterValue.toLowerCase())
                     || item['fname'].toString().toLowerCase().includes(filterValue.toLowerCase())
                     || item['lname'].toString().toLowerCase().includes(filterValue.toLowerCase())
-                    || item['tel'].toString().toLowerCase().includes(filterValue.toLowerCase())
+                    || item['phone'].toString().toLowerCase().includes(filterValue.toLowerCase())
                     || item['city'].toString().toLowerCase().includes(filterValue.toLowerCase())
             
         })
